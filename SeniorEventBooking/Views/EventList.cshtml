@@ -1,0 +1,18 @@
+﻿@* @inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage<ContentModels.EventLists>
+ *@@using ContentModels = Umbraco.Cms.Web.Common.PublishedModels;
+@using SeniorEventBooking.ContentModels;
+@{
+	Layout = null;
+}
+
+
+<h1>@Model.Title</h1>
+<ul>
+    @foreach (var ev in Model.Events)
+    {
+        <li>
+            <strong>@ev.Title</strong> — @ev.EventDateTime.ToShortDateString() — @ev.Location
+        </li>
+    }
+</ul>
+

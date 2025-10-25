@@ -1,0 +1,28 @@
+﻿@using Umbraco.Cms.Web.Common.PublishedModels;
+@* @inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage<ContentModels.Events>
+ *@@using ContentModels = Umbraco.Cms.Web.Common.PublishedModels;
+@{
+	Layout = "EventList.cshtml";
+   // var isAuthenticated = Umbraco.MemberIsLoggedOn();
+    bool isAuthenticated = User.Identity.IsAuthenticated;
+}
+
+<article class="event-detail">
+@* 
+    <p><strong>Date:</strong> @Model.Value()<DateTime>("eventDateTime"):f</p>
+    <p><strong>Location:</strong> @Model.Value()<string>("location")</p>
+    <p><strong>Capacity:</strong> @Model.Value()<int>("capacity")</p>
+    <div class="event-summary">@Html.Raw(Model.Value<string>("summary"))</div> *@
+
+    <hr />
+
+    <h2>Book this event</h2>
+    @if (!isAuthenticated)
+    {
+        <p>You must be logged in to book. <a href="/member/login?returnUrl=@Model.Url()">Log in</a></p>
+    }
+    else
+    {
+        @Html.Partial("~/Views/Partials/Booking/_BookingForm.cshtml")
+    }
+</article>
