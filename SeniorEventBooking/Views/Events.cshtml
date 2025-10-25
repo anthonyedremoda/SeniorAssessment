@@ -17,12 +17,14 @@
     <hr />
 
     <h2>Book this event</h2>
-    @if (!isAuthenticated)
+  @*   @if (!isAuthenticated)
     {
         <p>You must be logged in to book. <a href="/member/login?returnUrl=@Model.Url()">Log in</a></p>
     }
     else
     {
         @Html.Partial("~/Views/Partials/Booking/_BookingForm.cshtml")
-    }
+    } *@
+  
+        @* @Html.Partial("~/Views/Partials/Booking/_BookingForm.cshtml") *@
 </article>

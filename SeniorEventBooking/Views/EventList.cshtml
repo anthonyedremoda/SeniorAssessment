@@ -5,14 +5,14 @@
 	Layout = null;
 }
 
-
-<h1>@Model.Title</h1>
-<ul>
+@RenderBody()
+@* <h1>@Model.Title</h1> *@
+@* <ul>
     @foreach (var ev in Model.Events)
     {
         <li>
             <strong>@ev.Title</strong> — @ev.EventDateTime.ToShortDateString() — @ev.Location
         </li>
     }
-</ul>
+</ul> *@
 
