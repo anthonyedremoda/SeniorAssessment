@@ -1,30 +1,39 @@
-﻿@using Umbraco.Cms.Web.Common.PublishedModels;
-@* @inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage<ContentModels.Events>
- *@@using ContentModels = Umbraco.Cms.Web.Common.PublishedModels;
+﻿@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage<Umbraco.Cms.Core.Models.PublishedContent.IPublishedContent>
+
+@using Umbraco.Cms.Web.Common.Security
+
+
+@* @inject IMemberManager MemberManager
+ *@
 @{
-	Layout = "EventList.cshtml";
-   // var isAuthenticated = Umbraco.MemberIsLoggedOn();
-    bool isAuthenticated = User.Identity.IsAuthenticated;
+    //var isAuthenticated = await MemberManager.IsLoggedInAsync();
 }
 
 <article class="event-detail">
-@* 
-    <p><strong>Date:</strong> @Model.Value()<DateTime>("eventDateTime"):f</p>
-    <p><strong>Location:</strong> @Model.Value()<string>("location")</p>
-    <p><strong>Capacity:</strong> @Model.Value()<int>("capacity")</p>
-    <div class="event-summary">@Html.Raw(Model.Value<string>("summary"))</div> *@
+    <h1>@Model.Name</h1>
+    <p>
+        <strong>Date:</strong>
+        @Html.Raw(Model.Value<DateTime>("eventDateTime").ToString("f"))
+    </p>
+    <p><strong>Location:</strong> @Html.Raw(Model.Value<string>("location"))</p>
+    <p><strong>Capacity:</strong> @Html.Raw(Model.Value<int>("capacity"))</p>
+    <div class="event-summary">@Html.Raw(Model.Value<string>("summary"))</div>
 
     <hr />
 
     <h2>Book this event</h2>
   @*   @if (!isAuthenticated)
     {
-        <p>You must be logged in to book. <a href="/member/login?returnUrl=@Model.Url()">Log in</a></p>
+        <p>
+            You must be logged in to book.
+            <a href="/member/login?returnUrl=@Model.Url()">Log in</a>
+        </p>
     }
     else
     {
         @Html.Partial("~/Views/Partials/Booking/_BookingForm.cshtml")
     } *@
-  
-        @* @Html.Partial("~/Views/Partials/Booking/_BookingForm.cshtml") *@
+
+    @Html.Partial("~/Views/Partials/Booking/_BookingForm.cshtml", new SeniorEventBooking.Models.BookingFormViewModel { /* set properties as needed */ })
+
 </article>

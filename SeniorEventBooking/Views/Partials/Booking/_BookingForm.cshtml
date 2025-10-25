@@ -1,0 +1,47 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+@model SeniorEventBooking.Models.BookingFormViewModel
+@using Umbraco.Cms.Web.Common.Controllers
+
+@{
+    var error = TempData["bookingError"] as string;
+    var success = TempData["bookingSuccess"] as string;
+}
+
+@if (!string.IsNullOrEmpty(success))
+{
+    <div class="alert alert-success">@success</div>
+}
+
+@if (!string.IsNullOrEmpty(error))
+{
+    <div class="alert alert-danger">@error</div>
+}
+
+@using (Html.BeginUmbracoForm("Submit", "BookingSurface", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="mb-3">
+        <label for="Name" class="form-label">Name</label>
+        <input asp-for="Name" id="Name" name="Name" class="form-control" required />
+        @Html.ValidationMessageFor(m => m.Name, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="mb-3">
+        <label for="Email" class="form-label">Email</label>
+        <input asp-for="Email" id="Email" name="Email" type="email" class="form-control" required />
+        @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="mb-3">
+        <label for="Note" class="form-label">Note (optional)</label>
+        <textarea asp-for="Note" id="Note" name="Note" class="form-control" rows="4"></textarea>
+    </div>
+
+    <button type="submit" class="btn btn-primary mt-2">Book Now</button>
+}
