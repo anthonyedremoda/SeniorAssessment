@@ -1,10 +1,17 @@
 ﻿using System.Net.Http;
 using System.Net.Http.Json;
+using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using SeniorEventBooking.Models;
 using SeniorEventBooking.NewFolder;
+using System.Net.Http;
+using System.Text;
+using System.Text.Json;
+using System.Threading.Tasks;
+using Microsoft.Extensions.Options;
+using SeniorEventBooking.Models;
 
 namespace SeniorEventBooking.Services
 {
@@ -13,24 +20,48 @@ namespace SeniorEventBooking.Services
         private readonly HttpClient _http;
         private readonly ILogger<MemberbaseClient> _logger;
 
-        public MemberbaseClient(HttpClient http, IOptions<MemberbaseOptions> opts, ILogger<MemberbaseClient> logger)
+        private readonly HttpClient _httpClient;
+        private readonly MemberbaseOptions _options;
+
+        public MemberbaseClient(HttpClient httpClient, IOptions<MemberbaseOptions> options, HttpClient http, IOptions<MemberbaseOptions> opts, ILogger<MemberbaseClient> logger)
         {
             _http = http;
             _logger = logger;
             _http.BaseAddress = new System.Uri(opts.Value.BaseUrl);
             _http.DefaultRequestHeaders.Add("Authorization", $"Bearer {opts.Value.ApiKey}");
+            _options = options.Value;
+            _httpClient = httpClient;
         }
+
 
         public async Task<(string status, string body)> CreateContactAsync(string name, string email)
         {
-            var payload = new { name, email };
-            using var resp = await _http.PostAsJsonAsync("/contacts", payload);
-            var body = await resp.Content.ReadAsStringAsync();
-            var status = resp.IsSuccessStatusCode ? "success" : $"error:{(int)resp.StatusCode}";
-            if (!resp.IsSuccessStatusCode)
-                _logger.LogWarning("Memberbase CreateContact failed: {Status} {Body}", status, body);
-            return (status, body);
+            var payload = new
+            {
+                Name = name,
+                Email = email
+            };
+
+            var json = JsonSerializer.Serialize(payload);
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+            var response = await _httpClient.PostAsync(_options.BaseUrl, content);
+            var body = await response.Content.ReadAsStringAsync();
+
+            return (response.StatusCode.ToString(), body);
         }
+
+
+        //public async Task<(string status, string body)> CreateContactAsync(string name, string email)
+        //{
+        //    var payload = new { name, email };
+        //    using var resp = await _http.PostAsJsonAsync("/contacts", payload);
+        //    var body = await resp.Content.ReadAsStringAsync();
+        //    var status = resp.IsSuccessStatusCode ? "success" : $"error:{(int)resp.StatusCode}";
+        //    if (!resp.IsSuccessStatusCode)
+        //        _logger.LogWarning("Memberbase CreateContact failed: {Status} {Body}", status, body);
+        //    return (status, body);
+        //}
 
         public async Task<string> ContactByExternalID(string memberId)
         {

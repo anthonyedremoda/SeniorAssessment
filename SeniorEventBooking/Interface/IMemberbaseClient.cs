@@ -1,4 +1,5 @@
 ﻿
+using SeniorEventBooking.Models;
 using System.Threading.Tasks;
 
 namespace SeniorEventBooking.NewFolder

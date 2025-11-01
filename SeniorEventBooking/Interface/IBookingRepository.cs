@@ -10,6 +10,7 @@ namespace SeniorEventBooking.NewFolder
     {
         Task<int> InsertAsync(BookingRecord record);
         Task<IEnumerable<BookingRecord>> GetByEventUdiAsync(string eventUdi);
+        void AddBooking(BookingRecord bookingRecord);
     }
 }
 
@@ -25,7 +26,6 @@ namespace SeniorEventBooking.NewFolder
         {
             using var scope = _scopeProvider.CreateScope(autoComplete: true);
             var db = scope.Database;
-            // Fix: Adjusted to use the correct overload of InsertAsync with 3 arguments
             var insertedId = await db.InsertAsync(record);
             return Convert.ToInt32(insertedId);
         }
@@ -36,6 +36,11 @@ namespace SeniorEventBooking.NewFolder
             var db = scope.Database;
             var sql = new NPoco.Sql().Select("*").From("EventBookings").Where("EventUdi = @0", eventUdi);
             return await db.FetchAsync<BookingRecord>(sql);
+        }
+
+        public void AddBooking(BookingRecord bookingRecord)
+        {
+            throw new NotImplementedException();
         }
     }
 

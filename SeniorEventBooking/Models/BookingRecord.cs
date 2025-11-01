@@ -13,6 +13,7 @@ namespace SeniorEventBooking.Models
         public string? ApiStatus { get; set; }
         public string? ApiResponse { get; set; }
         public DateTime CreatedUtc { get; set; }
+        public DateTime CreatedAt { get; internal set; }
     }
 
 }
